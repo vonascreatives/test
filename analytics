@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Channel Analytics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="channel-analytics"></div>
+  <script>
+    const apiKey = 'AIzaSyDRinWejreP1XNowwWX8mx_aZ4kXLcdilg'; // Replace with your API key
+    const channelId = 'UCMnITyNSOuRzwtUchKWY1mQ'; // Replace with your channel ID
+
+    function displayAnalytics(data) {
+      let output = '<h2>Channel Analytics</h2>';
+      output += `<p>Subscribers: ${data.statistics.subscriberCount}</p>`;
+      output += `<p>Views: ${data.statistics.viewCount}</p>`;
+      output += `<p>Videos: ${data.statistics.videoCount}</p>`;
+      document.getElementById('channel-analytics').innerHTML = output;
+    }
+
+    function fetchAnalytics() {
+      fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.items && data.items.length > 0) {
+            displayAnalytics(data.items[0]);
+          } else {
+            console.error('No channel found');
+          }
+        })
+        .catch(error => console.error(error));
+    }
+
+    fetchAnalytics();
+    setInterval(fetchAnalytics, 60000); // Update every minute
+  </script>
+</body>
+</html>
